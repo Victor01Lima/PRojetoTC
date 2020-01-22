@@ -1,21 +1,16 @@
 package ConvertAFND;
 
-import ConvertAFND.GerarXML;
-import ConvertAFND.CarregarXml;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import ConvertAFND.Automato;
-import ConvertAFND.Estados;
-import ConvertAFND.EstadoFinal;
-import ConvertAFND.EstadoInicial;
+
 
 public class Inicial extends javax.swing.JFrame {
 
@@ -60,7 +55,7 @@ public class Inicial extends javax.swing.JFrame {
         jLabelCriaXml = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Convert AFND em AFD ");
+        setTitle("Conversor AFN to AFD ");
 
         jButtonAbrir.setText("Abrir");
         jButtonAbrir.addActionListener(new java.awt.event.ActionListener() {
@@ -224,25 +219,25 @@ public class Inicial extends javax.swing.JFrame {
                 arqName = selectedFile.getName();
                
                 automato_afn = _readXml.readXml(selectedFile.getAbsolutePath());
-                preencheTabela();
+                PreencheMatriz();
             }
         } catch (IOException ex) {
             Logger.getLogger(Inicial.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void preencheTabela() {
+    private void PreencheMatriz() {
         List<Estados> estados = automato_afn.getEstado();
         String Alfabeto = automato_afn.getAlfabeto();
         EstadoInicial estadoInicial = automato_afn.getEstadoincial();
         List<EstadoFinal> estadoFinal = automato_afn.getEstadofinal();
-        List<Transicao> transition = automato_afn.getTransition();
+        List<Transicao> transicao = automato_afn.getTransition();
 
-        String estado_Names = estados.stream().map(Estados::getName).collect(Collectors.joining(", "));
+        String estado_Nomes = estados.stream().map(Estados::getName).collect(Collectors.joining(", "));
         String estado_final = estadoFinal.stream().map(EstadoFinal::getName).collect(Collectors.joining(", "));
-        String _transition = transition.stream().map(Transicao::getRead).collect(Collectors.joining(""));
+        String _transition = transicao.stream().map(Transicao::getRead).collect(Collectors.joining(""));
 
-        jTextFieldEstados.setText(estado_Names);
+        jTextFieldEstados.setText(estado_Nomes);
         jTextFieldAlfabeto.setText(Alfabeto);
         jTextFieldEstadoInicial.setText(estadoInicial.getName());
         jTextFieldEstadosFinais.setText(estado_final);
@@ -253,11 +248,11 @@ public class Inicial extends javax.swing.JFrame {
             getEntrada.setText(_transition);
         }
         for (int i = 0;
-                i < transition.size();
+                i < transicao.size();
                 i++) {
-            String from = estados.get(transition.get(i).getFrom()).getName();
-            String read = transition.get(i).getRead();
-            String to = estados.get(transition.get(i).getTo()).getName();
+            String from = estados.get(transicao.get(i).getFrom()).getName();
+            String read = transicao.get(i).getRead();
+            String to = estados.get(transicao.get(i).getTo()).getName();
             transicaoAFND.setValueAt(from, i, 0);
             transicaoAFND.setValueAt(read, i, 1);
             transicaoAFND.setValueAt(to, i, 2);
@@ -301,26 +296,6 @@ public class Inicial extends javax.swing.JFrame {
         }
     }
 
-    private void buttonExecutarActionPerformed(java.awt.event.ActionEvent evt) {
-        GerarXML gera = new GerarXML();
-        try {
-            gera.gerar(auto_afd, arqName, true);
-
-        } catch (IOException ex) {
-            Logger.getLogger(Inicial.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        int i, j;
-
-        qtdLinhasAFD = transicoes_afd.size();
-
-        String p = auto_afd.getEstadoincial().getName();    // Seleciona o estado inicial
-        for (i = 0; i < getEntrada.getText().length(); i++) {
-            // Encontra o próximo estado
-            p = proximoEstado(p, getEntrada.getText().substring(i, i + 1));
-        }
-    }
-
     private void jTextFieldEstadosActionPerformed(java.awt.event.ActionEvent evt) {
 
     }
@@ -359,7 +334,7 @@ public class Inicial extends javax.swing.JFrame {
             boolean verifica = false;
             // Verifica se novoEstado já foi incluído na tabela AFD
             for (i = 0; i < transicoes_afd.size(); i++) {
-                //if (tabelaTransicaoAFD.getValueAt(i,0).toString().equals(novoEstado))
+                
                 if (transicoes_afd.get(i).getFrom() == retornaIdEstado(estado)
                         && transicoes_afd.get(i).getRead().equals(alfabeto[j])
                         && transicoes_afd.get(i).getTo() == retornaIdEstado(novoEstado)) {

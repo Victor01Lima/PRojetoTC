@@ -2,10 +2,6 @@ package ConvertAFND;
 
 import java.util.ArrayList;
 import java.util.List;
-import ConvertAFND.EstadoFinal;
-import ConvertAFND.EstadoInicial;
-import ConvertAFND.Estados;
-
 public class Automato {
 
     private List<Transicao> transition = new ArrayList();

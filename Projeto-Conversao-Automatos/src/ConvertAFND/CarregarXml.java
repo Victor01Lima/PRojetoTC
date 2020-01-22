@@ -1,9 +1,4 @@
 package ConvertAFND;
-
-import ConvertAFND.EstadoFinal;
-import ConvertAFND.EstadoInicial;
-import ConvertAFND.Automato;
-import ConvertAFND.Estados;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +38,7 @@ public class CarregarXml {
     public Automato readXml(String file) {
         Automato _automaton = new Automato();
 
-        List<Transicao> transition = new ArrayList();
+        List<Transicao> Transicao = new ArrayList();
         List<Estados> estado = new ArrayList();
         List<EstadoFinal> estadofinal = new ArrayList();
         EstadoInicial estadoinicial = new EstadoInicial();
@@ -57,6 +52,7 @@ public class CarregarXml {
                 Document doc = builder.parse(file);
                 NodeList listaEstados = doc.getElementsByTagName("state");
                 int tamanhoEstados = listaEstados.getLength();
+                
                 for (int i = 0; i < tamanhoEstados; i++) {
                     Estados _estado = new Estados();
                     org.w3c.dom.Node noEstado = listaEstados.item(i);
@@ -124,10 +120,10 @@ public class CarregarXml {
                     _transition.setFrom(Integer.parseInt(from));
                     _transition.setRead(read);
                     _transition.setTo(Integer.parseInt(to));
-                    transition.add(_transition);
+                    Transicao.add(_transition);
                 }
                 _automaton.setEstado(estado);
-                _automaton.setTransition(transition);
+                _automaton.setTransition(Transicao);
                 _automaton.setEstadofinal(estadofinal);
                 _automaton.setEstadoincial(estadoinicial);
                 _automaton.setAlfabeto(AlfabetoArray);
